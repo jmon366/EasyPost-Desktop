@@ -7,6 +7,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Configuration;
 using EasyPost;
+using System.Diagnostics;
+using System.Net;
+
 
 namespace EasyPost_Desktop
 {
@@ -123,29 +126,29 @@ namespace EasyPost_Desktop
             finally
             {
                 url = shipment.postage_label.label_url;
-                linkLabel1.Text = url;
             }
-        }
-        private void linkLabel1_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
-        {
             try
             {
-                VisitLink();
+                FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
+                dlg.ShowDialog();
+                String folder = dlg.SelectedPath;
+                folder = folder + @"\" + DateTime.Now.ToString("MM-dd-yyyy-h-mm-tt") + url.Substring(url.Length - 4);
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile(url, folder);
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("Unable to open link that was clicked.");
-            }
-        }
 
-        private void VisitLink()
-        {
-            // Change the color of the link text by setting LinkVisited
-            // to true.
-            linkLabel1.LinkVisited = true;
-            //Call the Process.Start method to open the default browser
-            //with a URL:
-            System.Diagnostics.Process.Start(url);
+            }
+            var selectedOption = MessageBox.Show("Create another label?", "Label Saved", MessageBoxButtons.YesNo);
+            if (selectedOption == DialogResult.Yes)
+            {
+                Application.Restart();
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
 
         private void label8_Click(object sender, EventArgs e)
