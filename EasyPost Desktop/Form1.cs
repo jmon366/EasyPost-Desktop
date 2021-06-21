@@ -132,7 +132,7 @@ namespace EasyPost_Desktop
                 FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
                 dlg.ShowDialog();
                 String folder = dlg.SelectedPath;
-                folder = folder + @"\" + DateTime.Now.ToString("MM-dd-yyyy-h-mm-tt") + url.Substring(url.Length - 4);
+                folder = folder + @"\" + DateTime.Now.ToString("MM-dd-yyyy-h-mm-ss") + url.Substring(url.Length - 4);
                 using WebClient webClient = new WebClient();
                 webClient.DownloadFile(url, folder);
             }
